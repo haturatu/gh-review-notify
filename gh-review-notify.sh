@@ -93,7 +93,9 @@ process_updates() {
     while IFS= read -r line; do
       if [[ -n "$line" ]]; then
         line_hash=$(echo "$line" | sha256sum | cut -d' ' -f1)
-        current_hashes+="$line_hash"$'\n'
+        # 改行コードの分岐が面倒なので`:wq`等でエディタ次第で保存時に動的に改行入るように
+        current_hashes+="$line_hash"$'
+'
       fi
     done <<< "$current_list"
     
@@ -105,8 +107,10 @@ process_updates() {
       if [[ -n "$line" ]]; then
         line_hash=$(echo "$line" | sha256sum | cut -d' ' -f1)
         # このハッシュが以前のリストにない場合、新しい項目
+        # 改行コードの分岐が面倒なので`:wq`等でエディタ次第で保存時に動的に改行入るように
         if [[ -z "$previous_hashes" ]] || ! echo "$previous_hashes" | grep -Fxq "$line_hash"; then
-          new_items_list+="$line"$'\n'
+          new_items_list+="$line"$'
+'
         fi
       fi
     done <<< "$current_list"
