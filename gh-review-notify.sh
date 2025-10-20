@@ -18,9 +18,10 @@
 PATH=$PATH:/opt/homebrew/bin
 
 # `gh auth token`で取得したトークンをBase64エンコードして設定してください
+# `echo -n "your_github_token" | base64`で取得した値を設定してください
 GH_TOKEN_BASE64=""
 
-# Slack Webhook URLの設定（環境変数から取得）
+# Slack Webhook URLの設定 `echo -n "slack_webhook_url" | base64`で取得した値を設定してください
 SLACK_WEBHOOK_URL_BASE64=""
 
 #################################
