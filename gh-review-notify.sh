@@ -129,9 +129,7 @@ process_updates() {
         send_to_slack "$title" "$new_items_list"
       fi
     else
-      # タイトルから絵文字を除去してログに出力
-      local title_for_log=$(echo "$title" | sed 's/^[^ ]* //')
-      echo "新規通知する必要はないかも: $title_for_log " >&2
+      echo "新規通知する必要はないかも" >&2
     fi
   fi
   
