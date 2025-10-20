@@ -147,18 +147,20 @@ trim() {
 main() {
   echo "Checking GitHub status..."
 
+  github_status=$(gh status 2>/dev/null)
+
   # レビュー依頼を取得（Review RequestsセクションからRepository Activityセクションの前まで）
   # PR番号（#数字）が含まれている行のみを取得
   #
   # 本当はgh statusの出力を`json`形式で取得できれば良いが、`gh api`をあんまりよく知らないので、とりあえずテキスト処理で頑張る
   # そして、awkしているのは実はパイプではなく全角の縦棒（│）で区切られている。。。！
-  review_requests=$(gh status 2>/dev/null | sed -n '/^Review Requests/,/^Repository Activity/p' | awk -F│ '{print $1}' | trim | grep -E '#[0-9]' | sort)
+  review_requests=$(printf "%s\n" "$github_status" | sed -n '/^Review Requests/,/^Repository Activity/p' | awk -F│ '{print $1}' | trim | grep -E '#[0-9]' | sort)
 
   # メンションを取得（Mentionsセクションから最後まで）
   # grep -A 1は、メンションの後に続く投稿内容の行も含めるため
   # これでハッシュしても、内容が変わった場合に再通知されるようになる
   # send_to_slack関数内でPR番号を抽出しているので、ここではそのまま渡す
-  mentions=$(gh status 2>/dev/null | sed '/^Mentions/,$p' | awk -F│ '{print $2}' | trim | grep -A 1 -E '#[0-9]' | sort)
+  mentions=$(printf "%s\n" "$github_status" | sed '/^Mentions/,$p' | awk -F│ '{print $2}' | trim | grep -A 1 -E '#[0-9]')
 
   # レビュー依頼を処理
   echo "Processing Review Requests..."
