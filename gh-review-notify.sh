@@ -131,7 +131,7 @@ process_updates() {
     else
       # タイトルから絵文字を除去してログに出力
       local title_for_log=$(echo "$title" | sed 's/^[^ ]* //')
-      echo "No $title_for_log detected." >&2
+      echo "新規通知する必要はないかも: $title_for_log " >&2
     fi
   fi
   
